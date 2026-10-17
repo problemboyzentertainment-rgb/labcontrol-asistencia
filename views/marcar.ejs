@@ -1,0 +1,31 @@
+<%- include('partials/header', { titulo: 'Marcar asistencia' }) %>
+<h1>Marcar asistencia</h1>
+<section class="card marcador">
+  <div class="reloj grande" data-reloj data-tz="<%= TZ %>" data-seg="1"></div>
+  <p class="muted">La hora oficial es la del servidor; no depende del reloj de tu dispositivo.</p>
+  <% const e = asis && asis.hora_entrada, s = asis && asis.hora_salida; %>
+  <div class="estado-hoy">
+    <div><small>Entrada</small><strong><%= fmtHora(e) %></strong></div>
+    <div><small>Salida</small><strong><%= fmtHora(s) %></strong></div>
+    <div><small>Estado</small><strong><% if (asis) { %><span class="badge <%= asis.estado %>"><%= asis.estado %></span><% } else { %>Sin registro<% } %></strong></div>
+    <div><small>Duración</small><strong><%= e ? fmtDur(e, s) : '—' %></strong></div>
+  </div>
+  <div class="acciones">
+    <form method="post" action="/marcar/entrada"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn grande ok" <%= e ? 'disabled' : '' %>>Registrar ENTRADA</button></form>
+    <form method="post" action="/marcar/salida"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn grande bad" <%= (!e || s) ? 'disabled' : '' %> <%= usos.length ? 'data-confirm="Tienes dispositivos en uso: se cerrarán automáticamente. ¿Registrar salida?"' : '' %>>Registrar SALIDA</button></form>
+  </div>
+</section>
+
+<section class="card"><h2>Mis dispositivos en uso (<%= usos.length %>)</h2>
+  <% if (!usos.length) { %><p class="muted">No tienes dispositivos en uso. <a href="/dispositivos">Ver inventario</a>.</p><% } else { %>
+  <div class="tabla-wrap"><table><thead><tr><th>Dispositivo</th><th>Propósito</th><th>Desde</th><th>Duración</th><th></th></tr></thead><tbody>
+  <% usos.forEach(u => { %><tr><td><%= u.codigo %> · <%= u.nombre %></td><td><%= u.proposito %></td><td><%= fmtHora(u.inicio) %></td><td><%= fmtDur(u.inicio) %></td>
+    <td><form method="post" action="/dispositivos/uso/<%= u.id %>/devolver"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="volver" value="marcar"><button class="btn sm">Devolver</button></form></td></tr><% }) %>
+  </tbody></table></div><% } %></section>
+
+<section class="card"><h2>Mis últimos 7 registros</h2>
+  <div class="tabla-wrap"><table><thead><tr><th>Fecha</th><th>Entrada</th><th>Salida</th><th>Estado</th></tr></thead><tbody>
+  <% hist.forEach(h => { %><tr><td><%= fmtFecha(h.fecha) %></td><td><%= fmtHora(h.hora_entrada) %></td><td><%= fmtHora(h.hora_salida) %></td><td><span class="badge <%= h.estado %>"><%= h.estado %></span></td></tr><% }) %>
+  <% if (!hist.length) { %><tr><td colspan="4" class="muted">Sin registros.</td></tr><% } %>
+  </tbody></table></div></section>
+<%- include('partials/footer') %>

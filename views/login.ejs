@@ -1,0 +1,14 @@
+<%- include('partials/header', { titulo: 'Ingreso' }) %>
+<section class="login">
+  <div class="logo grande">✓</div>
+  <h1>LabControl</h1>
+  <p class="muted">Control de asistencia del personal tecnológico y uso de dispositivos de laboratorio</p>
+  <% if (error) { %><div class="alerta error" role="alert"><%= error %></div><% } %>
+  <form method="post" action="/login" class="form">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label>Correo electrónico<input type="email" name="email" value="<%= email %>" required autofocus autocomplete="username"></label>
+    <label>Contraseña<input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="btn">Ingresar</button>
+  </form>
+</section>
+<%- include('partials/footer') %>

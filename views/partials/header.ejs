@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= typeof titulo !== 'undefined' ? titulo + ' · ' : '' %><%= appNombre %></title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f766e'/%3E%3Cpath d='M9 17l5 5 9-11' stroke='white' stroke-width='3.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+<% if (usuario) { %>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="marca"><span class="logo">✓</span> <%= appNombre %></div>
+    <nav>
+      <a href="/marcar" class="<%= ruta.startsWith('/marcar') ? 'on' : '' %>">Marcar asistencia</a>
+      <a href="/dispositivos" class="<%= ruta.startsWith('/dispositivos') ? 'on' : '' %>">Dispositivos</a>
+      <a href="/usos" class="<%= ruta.startsWith('/usos') ? 'on' : '' %>">Historial de uso</a>
+      <% if (usuario.rol === 'admin') { %>
+        <div class="sep">Administración</div>
+        <a href="/" class="<%= ruta === '/' ? 'on' : '' %>">Dashboard</a>
+        <a href="/asistencia" class="<%= ruta.startsWith('/asistencia') ? 'on' : '' %>">Asistencia diaria</a>
+        <a href="/personal" class="<%= ruta.startsWith('/personal') ? 'on' : '' %>">Personal</a>
+        <a href="/laboratorios" class="<%= ruta.startsWith('/laboratorios') ? 'on' : '' %>">Laboratorios</a>
+        <a href="/reportes" class="<%= ruta.startsWith('/reportes') ? 'on' : '' %>">Reportes</a>
+        <a href="/kiosco" class="<%= ruta.startsWith('/kiosco') ? 'on' : '' %>">Modo kiosco</a>
+        <a href="/bitacora" class="<%= ruta.startsWith('/bitacora') ? 'on' : '' %>">Bitácora</a>
+      <% } %>
+    </nav>
+    <div class="yo">
+      <a href="/perfil"><strong><%= usuario.nombre %></strong></a>
+      <small><%= usuario.rol === 'admin' ? 'Administrador' : 'Personal' %> · <%= usuario.codigo %></small>
+      <form method="post" action="/logout"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn sec sm">Cerrar sesión</button></form>
+    </div>
+  </aside>
+  <div class="cuerpo">
+    <header class="top">
+      <button class="burger" id="burger" aria-label="Menú">☰</button>
+      <span class="reloj" data-reloj data-tz="<%= TZ %>"></span>
+    </header>
+    <main>
+<% } else { %>
+<main class="solo">
+<% } %>
+<% if (flash) { %><div class="alerta <%= flash.tipo %>" role="alert"><%= flash.texto %></div><% } %>

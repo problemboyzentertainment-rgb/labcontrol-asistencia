@@ -1,0 +1,17 @@
+<%- include('../partials/header', { titulo: 'Laboratorio' }) %>
+<h1><%= l.id ? 'Editar' : 'Nuevo' %> laboratorio</h1>
+<% if (error) { %><div class="alerta error"><%= error %></div><% } %>
+<form method="post" action="/laboratorios<%= l.id ? '/' + l.id : '' %>" class="form card">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <div class="cols">
+    <label>Nombre<input name="nombre" value="<%= l.nombre || '' %>" required></label>
+    <label>Ubicación<input name="ubicacion" value="<%= l.ubicacion || '' %>"></label>
+    <label>Hora de apertura<input type="time" name="hora_apertura" value="<%= fmtTime(l.hora_apertura) %>" required></label>
+    <label>Hora de cierre<input type="time" name="hora_cierre" value="<%= fmtTime(l.hora_cierre) %>" required></label>
+    <label>Tolerancia (min)<input type="number" min="0" name="tolerancia_min" value="<%= l.tolerancia_min %>" required></label>
+    <label>Aforo<input type="number" min="1" name="aforo" value="<%= l.aforo %>" required></label>
+  </div>
+  <label class="check"><input type="checkbox" name="activo" <%= l.activo ? 'checked' : '' %>> Activo</label>
+  <div class="acciones"><button class="btn">Guardar</button><a class="btn sec" href="/laboratorios">Cancelar</a></div>
+</form>
+<%- include('../partials/footer') %>

@@ -1,0 +1,19 @@
+<%- include('../partials/header', { titulo: 'Dispositivo' }) %>
+<h1><%= d.id ? 'Editar' : 'Nuevo' %> dispositivo</h1>
+<% if (error) { %><div class="alerta error"><%= error %></div><% } %>
+<form method="post" action="/dispositivos<%= d.id ? '/' + d.id : '' %>" class="form card">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <div class="cols">
+    <label>Código<input name="codigo" value="<%= d.codigo || '' %>" required maxlength="40"></label>
+    <label>Nombre<input name="nombre" value="<%= d.nombre || '' %>" required></label>
+    <label>Tipo<input name="tipo" value="<%= d.tipo || '' %>" required placeholder="Red, Servidor, Embebido…"></label>
+    <label>Marca<input name="marca" value="<%= d.marca || '' %>"></label>
+    <label>Modelo<input name="modelo" value="<%= d.modelo || '' %>"></label>
+    <label>N.º de serie<input name="serie" value="<%= d.serie || '' %>"></label>
+    <label>Laboratorio<select name="laboratorio_id"><option value="">— Sin asignar —</option>
+      <% labs.forEach(l => { %><option value="<%= l.id %>" <%= d.laboratorio_id === l.id ? 'selected' : '' %>><%= l.nombre %></option><% }) %></select></label>
+    <label>Estado<select name="estado"><% ESTADOS.forEach(s => { %><option value="<%= s %>" <%= d.estado === s ? 'selected' : '' %>><%= s.replace('_',' ') %></option><% }) %></select></label>
+  </div>
+  <div class="acciones"><button class="btn">Guardar</button><a class="btn sec" href="/dispositivos">Cancelar</a></div>
+</form>
+<%- include('../partials/footer') %>

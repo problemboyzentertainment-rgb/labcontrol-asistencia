@@ -1,0 +1,16 @@
+<%- include('../partials/header', { titulo: 'Personal' }) %>
+<div class="titulo-fila"><h1>Personal tecnológico</h1><a class="btn" href="/personal/nuevo">+ Nuevo</a></div>
+<form class="filtros" method="get">
+  <input name="q" value="<%= q %>" placeholder="Buscar nombre, código o correo">
+  <select name="lab"><option value="">Todos los laboratorios</option><% labs.forEach(l => { %><option value="<%= l.id %>" <%= lab === l.id ? 'selected' : '' %>><%= l.nombre %></option><% }) %></select>
+  <button class="btn sec">Filtrar</button>
+</form>
+<div class="tabla-wrap"><table><thead><tr><th>Código</th><th>Nombre</th><th>Correo</th><th>Cargo</th><th>Laboratorio</th><th>Rol</th><th>Estado</th><th></th></tr></thead><tbody>
+<% filas.forEach(p => { %><tr><td><%= p.codigo %></td><td><%= p.apellidos %>, <%= p.nombres %></td><td><%= p.email %></td><td><%= p.cargo %></td><td><%= p.lab || '—' %></td><td><%= p.rol %></td>
+  <td><span class="badge <%= p.activo ? 'presente' : 'ausente' %>"><%= p.activo ? 'activo' : 'inactivo' %></span></td>
+  <td class="acc"><a class="btn sm sec" href="/personal/<%= p.id %>/editar">Editar</a>
+  <form method="post" action="/personal/<%= p.id %>/eliminar"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn sm bad" data-confirm="¿Eliminar a esta persona y TODO su historial?">Eliminar</button></form></td></tr>
+<% }) %><% if (!filas.length) { %><tr><td colspan="8" class="muted">Sin resultados.</td></tr><% } %>
+</tbody></table></div>
+<%- include('../partials/pager', { pag }) %>
+<%- include('../partials/footer') %>

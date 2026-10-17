@@ -1,0 +1,9 @@
+<%- include('../partials/header', { titulo: 'Laboratorios' }) %>
+<div class="titulo-fila"><h1>Laboratorios</h1><a class="btn" href="/laboratorios/nuevo">+ Nuevo</a></div>
+<div class="tabla-wrap"><table><thead><tr><th>Nombre</th><th>Ubicación</th><th>Horario</th><th>Tolerancia</th><th>Aforo</th><th>Personal</th><th>Dispositivos</th><th>Estado</th><th></th></tr></thead><tbody>
+<% filas.forEach(l => { %><tr><td><%= l.nombre %></td><td><%= l.ubicacion || '—' %></td><td><%= fmtTime(l.hora_apertura) %> – <%= fmtTime(l.hora_cierre) %></td><td><%= l.tolerancia_min %> min</td><td><%= l.aforo %></td><td><%= l.n_personal %></td><td><%= l.n_disp %></td>
+  <td><span class="badge <%= l.activo ? 'presente' : 'ausente' %>"><%= l.activo ? 'activo' : 'inactivo' %></span></td>
+  <td class="acc"><a class="btn sm sec" href="/laboratorios/<%= l.id %>/editar">Editar</a>
+  <form method="post" action="/laboratorios/<%= l.id %>/eliminar"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn sm bad" data-confirm="¿Eliminar este laboratorio?">Eliminar</button></form></td></tr>
+<% }) %></tbody></table></div>
+<%- include('../partials/footer') %>

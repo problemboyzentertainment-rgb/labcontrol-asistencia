@@ -1,0 +1,14 @@
+<%- include('../partials/header', { titulo: 'Historial de uso' }) %>
+<h1>Historial de uso de dispositivos</h1>
+<form class="filtros" method="get">
+  <label>Desde <input type="date" name="desde" value="<%= desde %>"></label>
+  <label>Hasta <input type="date" name="hasta" value="<%= hasta %>"></label>
+  <button class="btn sec">Filtrar</button>
+</form>
+<div class="tabla-wrap"><table><thead><tr><th>Dispositivo</th><% if (admin) { %><th>Persona</th><% } %><th>Inicio</th><th>Fin</th><th>Duración</th><th>Propósito</th><th>Obs.</th></tr></thead><tbody>
+<% filas.forEach(u => { %><tr><td><%= u.codigo %> · <%= u.dnombre %></td><% if (admin) { %><td><%= u.persona %></td><% } %><td><%= fmtFechaHora(u.inicio) %></td>
+  <td><%= u.fin ? fmtFechaHora(u.fin) : '' %><% if (!u.fin) { %><span class="badge en_uso">en uso</span><% } %></td><td><%= fmtDur(u.inicio, u.fin) %></td><td><%= u.proposito %></td><td><%= u.observacion || '' %></td></tr>
+<% }) %><% if (!filas.length) { %><tr><td colspan="7" class="muted">Sin registros.</td></tr><% } %>
+</tbody></table></div>
+<%- include('../partials/pager', { pag }) %>
+<%- include('../partials/footer') %>

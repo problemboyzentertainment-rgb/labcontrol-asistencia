@@ -1,0 +1,20 @@
+<%- include('../partials/header', { titulo: 'Reportes' }) %>
+<h1>Reportes</h1>
+<form class="filtros" method="get">
+  <label>Desde <input type="date" name="desde" value="<%= desde %>"></label>
+  <label>Hasta <input type="date" name="hasta" value="<%= hasta %>"></label>
+  <select name="lab"><option value="">Todos los laboratorios</option><% labs.forEach(l => { %><option value="<%= l.id %>" <%= lab === l.id ? 'selected' : '' %>><%= l.nombre %></option><% }) %></select>
+  <button class="btn sec">Generar</button>
+</form>
+<% const qs = `desde=${desde}&hasta=${hasta}${lab ? '&lab=' + lab : ''}`; %>
+<section class="card"><div class="titulo-fila"><h2>Asistencia por persona · promedio <%= prom %> %</h2><a class="btn sm" href="/reportes/asistencia.csv?<%= qs %>">Descargar CSV</a></div>
+  <p class="muted">% de asistencia = (presentes + tardanzas) / días laborables (lun–vie) del rango. Ausencias = días laborables sin registro de presencia ni justificación.</p>
+  <div class="tabla-wrap"><table><thead><tr><th>Código</th><th>Persona</th><th>Lab.</th><th>Días lab.</th><th>Pres.</th><th>Tard.</th><th>Just.</th><th>Aus.</th><th>% Asist.</th><th>Horas</th></tr></thead><tbody>
+  <% asis.forEach(r => { %><tr><td><%= r.codigo %></td><td><%= r.nombre %></td><td><%= r.lab %></td><td><%= r.dias_laborables %></td><td><%= r.presentes %></td><td><%= r.tardanzas %></td><td><%= r.justificados %></td><td><%= r.ausencias %></td>
+    <td><div class="barra"><i style="width:<%= Math.min(100, r.pct_asistencia) %>%"></i></div> <%= r.pct_asistencia %> %</td><td><%= r.horas %></td></tr><% }) %>
+  <% if (!asis.length) { %><tr><td colspan="10" class="muted">Sin datos.</td></tr><% } %></tbody></table></div></section>
+<section class="card"><div class="titulo-fila"><h2>Utilización de dispositivos</h2><a class="btn sm" href="/reportes/usos.csv?<%= qs %>">Descargar CSV (detalle)</a></div>
+  <div class="tabla-wrap"><table><thead><tr><th>Código</th><th>Dispositivo</th><th>Tipo</th><th>Lab.</th><th>Usos</th><th>Personas</th><th>Horas de uso</th></tr></thead><tbody>
+  <% uso.forEach(r => { %><tr><td><%= r.codigo %></td><td><%= r.nombre %></td><td><%= r.tipo %></td><td><%= r.lab %></td><td><%= r.usos %></td><td><%= r.personas %></td><td><%= r.horas %></td></tr><% }) %>
+  <% if (!uso.length) { %><tr><td colspan="7" class="muted">Sin datos.</td></tr><% } %></tbody></table></div></section>
+<%- include('../partials/footer') %>

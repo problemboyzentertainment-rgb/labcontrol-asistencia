@@ -1,0 +1,31 @@
+<%- include('partials/header', { titulo: 'Dashboard' }) %>
+<h1>Dashboard</h1>
+<div class="kpis">
+  <div class="kpi"><span><%= k.total %></span>Personal activo</div>
+  <div class="kpi ok"><span><%= k.presentes %></span>Presentes hoy</div>
+  <div class="kpi warn"><span><%= k.tardanzas %></span>Tardanzas hoy</div>
+  <div class="kpi bad"><span><%= k.ausentes %></span>Sin registro / ausentes</div>
+  <div class="kpi info"><span><%= k.usos_activos %></span>Dispositivos en uso</div>
+  <div class="kpi"><span><%= k.usos_hoy %></span>Usos iniciados hoy</div>
+</div>
+<div class="grid2">
+  <section class="card"><h2>Asistencia últimos 7 días</h2>
+    <canvas id="grafico-asistencia" height="200" data-serie="<%= JSON.stringify(serie) %>"></canvas></section>
+  <section class="card"><h2>Estado de dispositivos</h2>
+    <canvas id="grafico-disp" height="200" data-estados="<%= JSON.stringify(estados) %>"></canvas></section>
+</div>
+<div class="grid2">
+  <section class="card"><h2>En el laboratorio ahora (<%= enLab.length %>)</h2>
+    <% if (!enLab.length) { %><p class="muted">Nadie con entrada abierta.</p><% } else { %>
+    <div class="tabla-wrap"><table><thead><tr><th>Persona</th><th>Lab.</th><th>Entrada</th><th>Estado</th></tr></thead><tbody>
+      <% enLab.forEach(r => { %><tr><td><%= r.nombre %></td><td><%= r.lab || '—' %></td><td><%= fmtHora(r.hora_entrada) %></td><td><span class="badge <%= r.estado %>"><%= r.estado %></span></td></tr><% }) %>
+    </tbody></table></div><% } %></section>
+  <section class="card"><h2>Dispositivos en uso (<%= usosActivos.length %>)</h2>
+    <% if (!usosActivos.length) { %><p class="muted">Ningún dispositivo en uso.</p><% } else { %>
+    <div class="tabla-wrap"><table><thead><tr><th>Dispositivo</th><th>Persona</th><th>Desde</th><th></th></tr></thead><tbody>
+      <% usosActivos.forEach(u => { %><tr><td><%= u.dcodigo %> · <%= u.dnombre %></td><td><%= u.persona %></td><td><%= fmtHora(u.inicio) %></td>
+        <td><form method="post" action="/dispositivos/uso/<%= u.id %>/devolver"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="volver" value="panel"><button class="btn sm sec" data-confirm="¿Forzar la devolución de este dispositivo?">Forzar devolución</button></form></td></tr><% }) %>
+    </tbody></table></div><% } %></section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<%- include('partials/footer') %>

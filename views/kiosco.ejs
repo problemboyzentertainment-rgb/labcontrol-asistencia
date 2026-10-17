@@ -1,0 +1,16 @@
+<%- include('partials/header', { titulo: 'Kiosco' }) %>
+<h1>Modo kiosco</h1>
+<section class="card marcador kiosco">
+  <p class="muted">Equipo compartido del laboratorio (sesión de administrador). Cada persona se identifica con su <strong>código</strong> y su <strong>contraseña</strong>.</p>
+  <div class="reloj grande" data-reloj data-tz="<%= TZ %>" data-seg="1"></div>
+  <form method="post" action="/kiosco" class="form" autocomplete="off">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label>Código<input name="codigo" required placeholder="TEC-001" autofocus></label>
+    <label>Contraseña<input type="password" name="password" required autocomplete="off"></label>
+    <div class="acciones">
+      <button class="btn grande ok" name="accion" value="entrada">ENTRADA</button>
+      <button class="btn grande bad" name="accion" value="salida">SALIDA</button>
+    </div>
+  </form>
+</section>
+<%- include('partials/footer') %>

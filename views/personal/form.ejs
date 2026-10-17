@@ -1,0 +1,20 @@
+<%- include('../partials/header', { titulo: 'Personal' }) %>
+<h1><%= p.id ? 'Editar' : 'Nuevo' %> personal</h1>
+<% if (error) { %><div class="alerta error"><%= error %></div><% } %>
+<form method="post" action="/personal<%= p.id ? '/' + p.id : '' %>" class="form card">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <div class="cols">
+    <label>Código<input name="codigo" value="<%= p.codigo || '' %>" required maxlength="30"></label>
+    <label>Correo<input type="email" name="email" value="<%= p.email || '' %>" required></label>
+    <label>Nombres<input name="nombres" value="<%= p.nombres || '' %>" required></label>
+    <label>Apellidos<input name="apellidos" value="<%= p.apellidos || '' %>" required></label>
+    <label>Cargo<input name="cargo" value="<%= p.cargo || '' %>" placeholder="Técnico de laboratorio"></label>
+    <label>Laboratorio<select name="laboratorio_id"><option value="">— Sin asignar —</option>
+      <% labs.forEach(l => { %><option value="<%= l.id %>" <%= p.laboratorio_id === l.id ? 'selected' : '' %>><%= l.nombre %></option><% }) %></select></label>
+    <label>Rol<select name="rol"><option value="personal" <%= p.rol !== 'admin' ? 'selected' : '' %>>Personal</option><option value="admin" <%= p.rol === 'admin' ? 'selected' : '' %>>Administrador</option></select></label>
+    <label>Contraseña <%= p.id ? '(vacío = no cambiar)' : '(mín. 8)' %><input type="password" name="password" autocomplete="new-password" <%= p.id ? '' : 'required' %>></label>
+  </div>
+  <label class="check"><input type="checkbox" name="activo" <%= (p.id === undefined || p.activo) ? 'checked' : '' %>> Activo</label>
+  <div class="acciones"><button class="btn">Guardar</button><a class="btn sec" href="/personal">Cancelar</a></div>
+</form>
+<%- include('../partials/footer') %>

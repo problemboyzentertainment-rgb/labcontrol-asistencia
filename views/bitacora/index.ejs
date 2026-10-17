@@ -1,0 +1,8 @@
+<%- include('../partials/header', { titulo: 'Bitácora' }) %>
+<h1>Bitácora de auditoría</h1>
+<form class="filtros" method="get"><select name="accion"><option value="">Todas las acciones</option><% acciones.forEach(a => { %><option <%= accion === a ? 'selected' : '' %>><%= a %></option><% }) %></select><button class="btn sec">Filtrar</button></form>
+<div class="tabla-wrap"><table><thead><tr><th>Fecha y hora</th><th>Persona</th><th>Acción</th><th>Entidad</th><th>Detalle</th><th>IP</th></tr></thead><tbody>
+<% filas.forEach(b => { %><tr><td><%= fmtFechaHora(b.creado_en) %></td><td><%= b.persona || '—' %></td><td><code><%= b.accion %></code></td><td><%= b.entidad || '' %> <%= b.entidad_id || '' %></td><td><small><%= b.detalle ? JSON.stringify(b.detalle) : '' %></small></td><td><%= b.ip || '' %></td></tr>
+<% }) %><% if (!filas.length) { %><tr><td colspan="6" class="muted">Sin eventos.</td></tr><% } %></tbody></table></div>
+<%- include('../partials/pager', { pag }) %>
+<%- include('../partials/footer') %>

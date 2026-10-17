@@ -1,0 +1,23 @@
+<%- include('../partials/header', { titulo: 'Dispositivos' }) %>
+<div class="titulo-fila"><h1>Dispositivos de laboratorio</h1><% if (usuario.rol === 'admin') { %><a class="btn" href="/dispositivos/nuevo">+ Nuevo</a><% } %></div>
+<form class="filtros" method="get">
+  <input name="q" value="<%= q %>" placeholder="Buscar código, nombre o tipo">
+  <select name="estado"><option value="">Todos los estados</option><% ESTADOS.forEach(s => { %><option value="<%= s %>" <%= estado === s ? 'selected' : '' %>><%= s.replace('_',' ') %></option><% }) %></select>
+  <select name="lab"><option value="">Todos los laboratorios</option><% labs.forEach(l => { %><option value="<%= l.id %>" <%= lab === l.id ? 'selected' : '' %>><%= l.nombre %></option><% }) %></select>
+  <button class="btn sec">Filtrar</button>
+</form>
+<div class="tabla-wrap"><table><thead><tr><th>Código</th><th>Dispositivo</th><th>Tipo</th><th>Laboratorio</th><th>Estado</th><th>Acción</th></tr></thead><tbody>
+<% filas.forEach(d => { %><tr><td><%= d.codigo %></td><td><strong><%= d.nombre %></strong><br><small class="muted"><%= [d.marca, d.modelo].filter(Boolean).join(' ') %></small></td><td><%= d.tipo %></td><td><%= d.lab || '—' %></td>
+  <td><span class="badge <%= d.estado %>"><%= d.estado.replace('_',' ') %></span><% if (d.usuario_actual) { %><br><small class="muted"><%= d.usuario_actual %></small><% } %></td>
+  <td class="acc">
+  <% if (d.estado === 'disponible') { %>
+    <form method="post" action="/dispositivos/<%= d.id %>/usar" class="inline"><input type="hidden" name="_csrf" value="<%= csrf %>">
+      <input name="proposito" placeholder="Propósito del uso" required maxlength="255"><button class="btn sm ok">Usar</button></form>
+  <% } %>
+  <% if (usuario.rol === 'admin') { %><a class="btn sm sec" href="/dispositivos/<%= d.id %>/editar">Editar</a>
+    <form method="post" action="/dispositivos/<%= d.id %>/eliminar"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn sm bad" data-confirm="¿Eliminar dispositivo y su historial de uso?">Eliminar</button></form><% } %>
+  </td></tr>
+<% }) %><% if (!filas.length) { %><tr><td colspan="6" class="muted">Sin resultados.</td></tr><% } %>
+</tbody></table></div>
+<%- include('../partials/pager', { pag }) %>
+<%- include('../partials/footer') %>
