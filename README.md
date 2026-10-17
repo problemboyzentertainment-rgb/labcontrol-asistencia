@@ -43,8 +43,7 @@ Con PostgreSQL local: `createdb labcontrol`. Las tablas y los datos de demostrac
 - `test/e2e.test.js`: flujo extremo a extremo (login, CSRF, roles, regla asistencia→uso, exclusión mutua, cierre automático por salida, CSV).
   `BASE_URL=http://localhost:3000 npm test` (consume 3 logins; el limitador permite 15 por 15 min por IP).
 
-## Despliegue
-Ver **[DESPLIEGUE.md](DESPLIEGUE.md)** (GitHub + Render Blueprint, plan gratuito) y **[docs/ARQUITECTURA.md](docs/ARQUITECTURA.md)** (diseño, consistencia, seguridad, límites).
+
 
 ## Estructura
 ```
